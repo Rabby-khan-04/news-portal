@@ -55,7 +55,7 @@ const pushNews = (allNews) => {
           </div>
           <div class="d-flex align-items-center gap-1">
             <i class="fas fa-eye"></i>
-            <p class="m-0 p-0">${total_view}</p>
+            <p class="m-0 p-0">${total_view ? total_view : "Not Available"}</p>
           </div>
           <div class="d-flex gap-2">
             ${showRating(rating.number)}

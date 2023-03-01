@@ -1,4 +1,4 @@
-let todayPickNews = [];
+let filterAbleNews = [];
 const loadCategory = () => {
   const categoryUrl =
     "https://openapi.programming-hero.com/api/news/categories";
@@ -25,7 +25,7 @@ const showNews = (category_id, category_name) => {
 };
 
 const displayNews = (data) => {
-  todayPickNews = data.data;
+  filterAbleNews = data.data;
   const allNews = data.data;
   pushNews(allNews);
 };
@@ -67,15 +67,26 @@ const showNewsDetails = (newsDetails) => {
 };
 
 const showTodaysPick = () => {
-  const pickedNews = todayPickNews.filter(
+  const pickedNews = filterAbleNews.filter(
     (news) => news.others_info.is_todays_pick
   );
   pushNews(pickedNews);
 };
 
 const showTrending = () => {
-  const pickedNews = todayPickNews.filter(
+  const pickedNews = filterAbleNews.filter(
     (news) => news.others_info.is_trending
   );
   pushNews(pickedNews);
 };
+
+document.getElementById("floatingSelect").addEventListener("change", () => {
+  const sortValue = document.getElementById("floatingSelect").value;
+  if (sortValue === "review") {
+    filterAbleNews.sort((a, b) => b.rating.number - a.rating.number);
+    pushNews(filterAbleNews);
+  } else if (sortValue === "Most viewed") {
+    filterAbleNews.sort((a, b) => b.total_view - a.total_view);
+    pushNews(filterAbleNews);
+  }
+});
