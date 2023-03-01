@@ -36,6 +36,11 @@
         <!-- News Categories section starts-->
         <section class="container categories-container d-flex justify-content-between py-4" id="categories-container">
         </section>
+        <section id="categoy-spinner" class="text-center d-none">
+            <div class="spinner-border text-warning" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </section>
         <!-- News Categories section ends -->
     </header>
 
@@ -59,10 +64,10 @@
 
                 <div>
                     <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                        <option selected>Default</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option selected disabled>Sort News</option>
+                        <option value="ascending">ascending</option>
+                        <option value="descending">descending</option>
+                        <option value="review">Sort By Review</option>
                     </select>
                 </div>
             </div>
@@ -75,8 +80,33 @@
 
         <section class="all-news mb-4">
             <div class="container" id="all-news">
-
+                <div id="news-spinner" class="text-center d-none">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
+            <!-- Modal Body Start -->
+
+            <!-- Modal -->
+            <div class="modal fade" id="news-modal" tabindex="-1" aria-labelledby="news-modalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="news-modalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div id="modal-body" class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal Body Ends -->
         </section>
     </main>
 

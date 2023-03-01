@@ -1,3 +1,4 @@
+let todayPickNews = [];
 const loadCategory = () => {
   const categoryUrl =
     "https://openapi.programming-hero.com/api/news/categories";
@@ -6,6 +7,7 @@ const loadCategory = () => {
 
 const showCategory = (data) => {
   const categories = data.data.news_category;
+  document.getElementById("categoy-spinner").classList.add("d-none");
   categories.forEach((category) => {
     const { category_id, category_name } = category;
     document.getElementById("categories-container").innerHTML += `
@@ -23,61 +25,57 @@ const showNews = (category_id, category_name) => {
 };
 
 const displayNews = (data) => {
+  todayPickNews = data.data;
   const allNews = data.data;
-  document.getElementById("news-count").innerText = allNews.length;
-  document.getElementById("all-news").innerHTML = "";
-  allNews.forEach((news) => {
-    const {
-      _id,
-      is_todays_pick,
-      is_trending,
-      rating,
-      total_view,
-      title,
-      author,
-      thumbnail_url,
-      details,
-    } = news;
-    document.getElementById("all-news").innerHTML += `
-    <div class="card mb-3">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src='${thumbnail_url}' class="img-fluid rounded-start" alt="..." />
-        </div>
-      <div class="col-md-8 d-flex flex-column">
-        <div class="card-body">
-          <h5 class="card-title">${title}</h5>
-          <p class="card-text">${
-            details.length < 300 ? details : details.slice(0, 300)
-          }</p>
-        </div>
-        <div class="card-footer border-0 bg-body d-flex justify-content-between align-items-center">
-          <div class="d-flex gap-2">
-            <img src="..." class="img-fluid rounded-circle" alt="..." height="40" width="40" />
-            <div>
-              <p class="m-0 p-0">author.name</p>
-              <p class="m-0 p-0">author.published_date</p>
-            </div>
-          </div>
-          <div class="d-flex align-items-center">
-            <i class="fas fa-eye"></i>
-            <p class="m-0 p-0">total_view</p>
-          </div>
-          <div class="d-flex gap-2">
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half"></i>
-            <p class="mb-0">rating.number</p>
-          </div>
-          <div>
-            <i class="fas fa-arrow-right"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-    `;
-  });
+  pushNews(allNews);
+};
+
+const showRating = (rating) => {
+  let ratingHtml = "";
+  for (let i = 1; i <= Math.floor(rating); i++) {
+    ratingHtml += '<i class="fas fa-star"></i>';
+  }
+  if (rating - Math.floor(rating) > 0) {
+    ratingHtml += '<i class="fas fa-star-half"></i>';
+  }
+  ratingHtml += `<p class="mb-0">${rating}</p>`;
+
+  return ratingHtml;
+};
+
+const openNews = (newsId) => {
+  const fullNewsUrl = `https://openapi.programming-hero.com/api/news/${newsId}`;
+  fetchAndLoad(fullNewsUrl, showNewsDetails);
+};
+
+const showNewsDetails = (newsDetails) => {
+  const news = newsDetails.data[0];
+  console.log(news);
+  const { title, image_url, details, rating, others_info } = news;
+  document.getElementById("news-modalLabel").innerText = title;
+  document.getElementById("modal-body").innerHTML = `
+  <img src='${image_url}' class="img-fluid rounded-start mb-3" alt="..." />
+  <span class="badge text-bg-warning">${rating.badge}</span>
+  <span id="trending" class="badge text-bg-danger">${
+    others_info.is_trending ? "Trenging" : "none"
+  }</span>
+  <p class="card-text">${details}</p>
+  `;
+  if (!others_info.is_trending) {
+    document.getElementById("trending").style.display = "none";
+  }
+};
+
+const showTodaysPick = () => {
+  const pickedNews = todayPickNews.filter(
+    (news) => news.others_info.is_todays_pick
+  );
+  pushNews(pickedNews);
+};
+
+const showTrending = () => {
+  const pickedNews = todayPickNews.filter(
+    (news) => news.others_info.is_trending
+  );
+  pushNews(pickedNews);
 };
